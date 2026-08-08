@@ -195,6 +195,8 @@ def train_baseline(
         raise DataValidationError(f"Target column not found: {target_column}")
     if date_column == target_column:
         raise DataValidationError("The date column and target column must be different")
+    if date_column and date_column not in frame.columns:
+        raise DataValidationError(f"Date column not found: {date_column}")
     if len(frame) < 20:
         raise DataValidationError("At least 20 rows are required to train and evaluate the baseline")
 
@@ -218,7 +220,7 @@ def train_baseline(
         target = target.iloc[order].reset_index(drop=True)
 
     features = _prepare_features(raw_features, date_column)
-    validation_rows = max(1, int(math.ceil(len(features) * test_size)))
+    validation_rows = max(2, int(math.ceil(len(features) * test_size)))
 
     if date_column:
         split_index = len(features) - validation_rows
@@ -244,6 +246,10 @@ def train_baseline(
         "rmse": float(math.sqrt(mean_squared_error(y_validation, predictions))),
         "r2": float(r2_score(y_validation, predictions)),
     }
+    if not all(math.isfinite(value) for value in metrics.values()):
+        raise DataValidationError(
+            "Evaluation produced a non-finite metric; review the validation data and target variability"
+        )
 
     artifact = {
         "pipeline": pipeline,
