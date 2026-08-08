@@ -80,7 +80,7 @@ python main.py train \
   --metadata-out artifacts/metrics.json
 ```
 
-The date column is sorted before the split and converted into year, month, day and weekday features. Without `--date-column`, the project uses a repeatable random holdout.
+The date column is sorted before the split and converted into year, month, day and weekday features. Without `--date-column`, the project uses a repeatable random holdout. Evaluation always reserves at least two validation rows so R² is not computed from a one-row holdout.
 
 ## Export predictions
 
@@ -92,6 +92,10 @@ python main.py predict \
 ```
 
 Prediction data must contain the same raw feature columns used for training. Extra columns are preserved in the output.
+
+### Model artifact safety
+
+`joblib` model files use Python pickle semantics and can execute code while loading. Only pass `--model` files created by this project locally or obtained from a source you explicitly trust. Do not download arbitrary `.joblib` or pickle files and load them with the prediction command.
 
 ## Tests
 
