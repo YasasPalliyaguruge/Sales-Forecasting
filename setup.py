@@ -1,29 +1,24 @@
-import setuptools
+from pathlib import Path
 
-with open("README.md", "r", encoding="utf-8") as f:
-    long_description = f.read()
-
-
-__version__ = "0.0.0"
-
-REPO_NAME = "Sales-Forecasting"
-AUTHOR_USER_NAME = "YasasPalliyaguruge"
-SRC_REPO = ""
-AUTHOR_EMAIL = "developer.yasas@gmail.com"
+from setuptools import find_packages, setup
 
 
-setuptools.setup(
-    name=SRC_REPO,
-    version=__version__,
-    author=AUTHOR_USER_NAME,
-    author_email=AUTHOR_EMAIL,
-    description="A small python package for ml app",
-    long_description=long_description,
-    long_description_content="text/markdown",
-    url=f"https://github.com/{AUTHOR_USER_NAME}/{REPO_NAME}",
-    project_urls={
-        "Bug Tracker": f"https://github.com/{AUTHOR_USER_NAME}/{REPO_NAME}/issues",
-    },
-    package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+ROOT = Path(__file__).parent
+
+setup(
+    name="sales-forecasting-baseline",
+    version="0.1.0",
+    author="YasasPalliyaguruge",
+    description="A reproducible mixed-type regression baseline for sales datasets",
+    long_description=(ROOT / "README.md").read_text(encoding="utf-8"),
+    long_description_content_type="text/markdown",
+    url="https://github.com/YasasPalliyaguruge/Sales-Forecasting",
+    packages=find_packages(),
+    python_requires=">=3.10",
+    install_requires=[
+        "joblib>=1.3",
+        "numpy>=1.24",
+        "pandas>=2.0",
+        "scikit-learn>=1.3",
+    ],
 )
