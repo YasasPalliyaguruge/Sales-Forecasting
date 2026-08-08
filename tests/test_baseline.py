@@ -1,3 +1,4 @@
+import math
 import tempfile
 import unittest
 import zipfile
@@ -98,6 +99,31 @@ class BaselinePipelineTests(unittest.TestCase):
                 self.root / "m.joblib",
                 self.root / "m.json",
             )
+
+    def test_rejects_missing_date_column_cleanly(self) -> None:
+        with self.assertRaisesRegex(DataValidationError, "Date column not found"):
+            train_baseline(
+                self.csv_path,
+                "sales",
+                self.root / "missing-date.joblib",
+                self.root / "missing-date.json",
+                date_column="missing_date",
+            )
+
+    def test_minimum_holdout_has_two_rows_and_finite_metrics(self) -> None:
+        small_path = self.root / "small.csv"
+        self.frame.head(20).to_csv(small_path, index=False)
+        result = train_baseline(
+            small_path,
+            "sales",
+            self.root / "small.joblib",
+            self.root / "small.json",
+            date_column="date",
+            test_size=0.05,
+            max_iter=20,
+        )
+        self.assertEqual(result.validation_rows, 2)
+        self.assertTrue(all(math.isfinite(value) for value in result.metrics.values()))
 
 
 if __name__ == "__main__":
