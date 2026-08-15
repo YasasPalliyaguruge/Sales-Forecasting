@@ -105,9 +105,9 @@ python -m unittest discover -s tests -v
 
 GitHub Actions runs the test suite and a CLI smoke test for pull requests and pushes to `main`.
 
-## Data repository
+## Data input
 
-The separate `Data-Sales_Forecasting` repository currently stores compressed training, test and outlet files. Their licence and final distribution path should be confirmed before merging or republishing them here. This project deliberately leaves those archives unchanged.
+The workflow intentionally accepts user-supplied CSV files or ZIP archives rather than depending on a separate repository. Before using external or historical datasets, verify their provenance, licence, schema and redistribution terms.
 
 ## Current limitations
 
